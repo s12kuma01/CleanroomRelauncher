@@ -37,14 +37,14 @@ public class ConfirmationStep implements WizardStep {
         ));
 
         // Title
-        JLabel titleLabel = DesignSystem.createHeading("設定の確認");
+        JLabel titleLabel = DesignSystem.createHeading("Confirm Configuration");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(titleLabel);
         mainPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
 
         // Description
         JLabel descLabel = DesignSystem.createBody(
-            "以下の設定でCleanroomを再起動します。内容を確認してください。"
+            "Cleanroom will relaunch with the following configuration. Please review."
         );
         descLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(descLabel);
@@ -82,7 +82,7 @@ public class ConfirmationStep implements WizardStep {
         ));
 
         // Cleanroom version
-        JPanel versionPanel = createInfoRow("Cleanroomバージョン:");
+        JPanel versionPanel = createInfoRow("Cleanroom Version:");
         cleanroomVersionLabel = DesignSystem.createBody("");
         cleanroomVersionLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         versionPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_XS));
@@ -94,7 +94,7 @@ public class ConfirmationStep implements WizardStep {
         card.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_MD));
 
         // Java path
-        JPanel javaPanel = createInfoRow("Java実行ファイル:");
+        JPanel javaPanel = createInfoRow("Java Executable:");
         javaPathLabel = DesignSystem.createBodySmall("");
         javaPathLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         javaPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_XS));
@@ -106,7 +106,7 @@ public class ConfirmationStep implements WizardStep {
         card.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_MD));
 
         // Java args
-        JPanel argsPanel = createInfoRow("Java引数:");
+        JPanel argsPanel = createInfoRow("Java Arguments:");
         javaArgsLabel = DesignSystem.createBodySmall("");
         javaArgsLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         argsPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_XS));
@@ -148,14 +148,14 @@ public class ConfirmationStep implements WizardStep {
         ));
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
 
-        JLabel titleLabel = DesignSystem.createSubheading("⚠ 注意");
+        JLabel titleLabel = DesignSystem.createSubheading("⚠ Warning");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titleLabel.setForeground(DesignSystem.WARNING);
         panel.add(titleLabel);
         panel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
 
         JLabel warningLabel = DesignSystem.createBody(
-            "完了ボタンを押すと、現在のMinecraftプロセスが終了し、Cleanroomで再起動されます。"
+            "Clicking Finish will exit the current Minecraft process and relaunch with Cleanroom."
         );
         warningLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         warningLabel.setForeground(DesignSystem.TEXT_PRIMARY);
@@ -183,7 +183,7 @@ public class ConfirmationStep implements WizardStep {
         if (javaArgs != null && !javaArgs.isEmpty()) {
             javaArgsLabel.setText("<html><code>" + javaArgs + "</code></html>");
         } else {
-            javaArgsLabel.setText("(なし)");
+            javaArgsLabel.setText("(None)");
         }
     }
 
@@ -200,7 +200,7 @@ public class ConfirmationStep implements WizardStep {
 
     @Override
     public String getTitle() {
-        return "確認";
+        return "Confirmation";
     }
 
     @Override

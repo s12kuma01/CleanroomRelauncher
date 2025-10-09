@@ -52,14 +52,14 @@ public class JavaSelectionStep implements WizardStep {
         ));
 
         // Title
-        JLabel titleLabel = DesignSystem.createHeading("Java実行ファイルを選択");
+        JLabel titleLabel = DesignSystem.createHeading("Select Java Executable");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(titleLabel);
         mainPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
 
         // Description
         JLabel descLabel = DesignSystem.createBody(
-            "Cleanroomの実行に使用するJava 21以上の実行ファイルを選択してください。"
+            "Select a Java 21+ executable to use for running Cleanroom."
         );
         descLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(descLabel);
@@ -101,7 +101,7 @@ public class JavaSelectionStep implements WizardStep {
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
 
         // Label
-        JLabel label = DesignSystem.createSubheading("Javaパス:");
+        JLabel label = DesignSystem.createSubheading("Java Path:");
         card.add(label, BorderLayout.NORTH);
 
         // Path field and browse button
@@ -124,7 +124,7 @@ public class JavaSelectionStep implements WizardStep {
 
         inputPanel.add(javaPathField, BorderLayout.CENTER);
 
-        browseButton = DesignSystem.createSecondaryButton("参照...");
+        browseButton = DesignSystem.createSecondaryButton("Browse...");
         browseButton.addActionListener(e -> browseForJava());
         inputPanel.add(browseButton, BorderLayout.EAST);
 
@@ -139,7 +139,7 @@ public class JavaSelectionStep implements WizardStep {
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
         panel.setBackground(new Color(232, 244, 253));
 
-        JLabel label = DesignSystem.createSubheading("検出されたJava:");
+        JLabel label = DesignSystem.createSubheading("Detected Java Installations:");
         panel.add(label, BorderLayout.NORTH);
 
         javaInstallComboBox = DesignSystem.createComboBox();
@@ -149,7 +149,7 @@ public class JavaSelectionStep implements WizardStep {
             if (selected != null) {
                 javaPath = selected.executable(true).getAbsolutePath();
                 javaPathField.setText(javaPath);
-                setStatus("Java " + selected.version().major() + " が選択されました", DesignSystem.SUCCESS);
+                setStatus("Java " + selected.version().major() + " selected", DesignSystem.SUCCESS);
             }
         });
 
@@ -164,10 +164,10 @@ public class JavaSelectionStep implements WizardStep {
         panel.setBackground(DesignSystem.SURFACE);
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, DesignSystem.BUTTON_HEIGHT));
 
-        autoDetectButton = DesignSystem.createPrimaryButton("自動検出");
+        autoDetectButton = DesignSystem.createPrimaryButton("Auto-Detect");
         autoDetectButton.addActionListener(e -> autoDetectJava());
 
-        testButton = DesignSystem.createSecondaryButton("テスト");
+        testButton = DesignSystem.createSecondaryButton("Test");
         testButton.addActionListener(e -> testJava());
 
         panel.add(autoDetectButton);
@@ -178,7 +178,7 @@ public class JavaSelectionStep implements WizardStep {
 
     private void browseForJava() {
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Java実行ファイルを選択");
+        fileChooser.setDialogTitle("Select Java Executable");
 
         if (javaPath != null && !javaPath.isEmpty()) {
             File currentFile = new File(javaPath);
@@ -199,7 +199,7 @@ public class JavaSelectionStep implements WizardStep {
 
             @Override
             public String getDescription() {
-                return Platform.current().isWindows() ? "Java実行ファイル (*.exe)" : "Java実行ファイル";
+                return Platform.current().isWindows() ? "Java Executable (*.exe)" : "Java Executable";
             }
         };
 
@@ -216,19 +216,19 @@ public class JavaSelectionStep implements WizardStep {
 
     private void autoDetectJava() {
         String originalText = autoDetectButton.getText();
-        autoDetectButton.setText("検出中");
+        autoDetectButton.setText("Detecting");
         autoDetectButton.setEnabled(false);
-        setStatus("Java 21以上を検索中...", DesignSystem.INFO);
+        setStatus("Searching for Java 21+...", DesignSystem.INFO);
 
         AtomicInteger dotCount = new AtomicInteger(0);
         String[] dots = { ".", "..", "..." };
         Timer timer = new Timer(400, e -> {
-            autoDetectButton.setText("検出中" + dots[dotCount.get()]);
+            autoDetectButton.setText("Detecting" + dots[dotCount.get()]);
             dotCount.set((dotCount.get() + 1) % dots.length);
         });
         timer.start();
 
-        SwingWorker<List<JavaInstall>, Void> worker = new SwingWorker<>() {
+        SwingWorker<List<JavaInstall>, Void> worker = new SwingWorker<List<JavaInstall>, Void>() {
             @Override
             protected List<JavaInstall> doInBackground() {
                 return JavaLocator.locators().parallelStream()
@@ -250,10 +250,10 @@ public class JavaSelectionStep implements WizardStep {
                     detectedJavaInstalls = get();
 
                     if (detectedJavaInstalls.isEmpty()) {
-                        setStatus("Java 21以上が見つかりませんでした", DesignSystem.WARNING);
+                        setStatus("No Java 21+ installations found", DesignSystem.WARNING);
                         comboBoxPanel.setVisible(false);
                     } else {
-                        setStatus(detectedJavaInstalls.size() + "個のJava 21以上のインストールが見つかりました", DesignSystem.SUCCESS);
+                        setStatus("Found " + detectedJavaInstalls.size() + " Java 21+ installation(s)", DesignSystem.SUCCESS);
 
                         // Populate combo box
                         DefaultComboBoxModel<JavaInstall> model = new DefaultComboBoxModel<>();
@@ -272,7 +272,7 @@ public class JavaSelectionStep implements WizardStep {
                     panel.revalidate();
                     panel.repaint();
                 } catch (Exception e) {
-                    setStatus("検出中にエラーが発生しました: " + e.getMessage(), DesignSystem.ERROR);
+                    setStatus("Error during detection: " + e.getMessage(), DesignSystem.ERROR);
                 }
             }
         };
@@ -282,13 +282,13 @@ public class JavaSelectionStep implements WizardStep {
 
     private void testJava() {
         if (javaPath == null || javaPath.trim().isEmpty()) {
-            setStatus("Javaパスを入力してください", DesignSystem.WARNING);
+            setStatus("Please enter a Java path", DesignSystem.WARNING);
             return;
         }
 
         File javaFile = new File(javaPath);
         if (!javaFile.exists()) {
-            setStatus("指定されたJava実行ファイルが存在しません", DesignSystem.ERROR);
+            setStatus("The specified Java executable does not exist", DesignSystem.ERROR);
             return;
         }
 
@@ -297,12 +297,12 @@ public class JavaSelectionStep implements WizardStep {
             int majorVersion = install.version().major();
 
             if (majorVersion < 21) {
-                setStatus("Java 21以上が必要です（現在: Java " + majorVersion + "）", DesignSystem.ERROR);
+                setStatus("Java 21+ required (current: Java " + majorVersion + ")", DesignSystem.ERROR);
             } else {
-                setStatus("✓ Java " + majorVersion + " (" + install.vendor() + ") - 正常に動作します", DesignSystem.SUCCESS);
+                setStatus("✓ Java " + majorVersion + " (" + install.vendor() + ") - works correctly", DesignSystem.SUCCESS);
             }
         } catch (IOException e) {
-            setStatus("Javaのテストに失敗しました: " + e.getMessage(), DesignSystem.ERROR);
+            setStatus("Failed to test Java: " + e.getMessage(), DesignSystem.ERROR);
         }
     }
 
@@ -322,27 +322,27 @@ public class JavaSelectionStep implements WizardStep {
 
     @Override
     public String getTitle() {
-        return "Java選択";
+        return "Select Java";
     }
 
     @Override
     public String validate() {
         if (javaPath == null || javaPath.trim().isEmpty()) {
-            return "Javaパスを入力してください。";
+            return "Please enter a Java path.";
         }
 
         File javaFile = new File(javaPath);
         if (!javaFile.exists()) {
-            return "指定されたJava実行ファイルが存在しません。";
+            return "The specified Java executable does not exist.";
         }
 
         try {
             JavaInstall install = JavaUtils.parseInstall(javaPath);
             if (install.version().major() < 21) {
-                return "Java 21以上が必要です。現在: Java " + install.version().major();
+                return "Java 21+ required. Current: Java " + install.version().major();
             }
         } catch (IOException e) {
-            return "Javaのバージョン確認に失敗しました: " + e.getMessage();
+            return "Failed to verify Java version: " + e.getMessage();
         }
 
         return null;

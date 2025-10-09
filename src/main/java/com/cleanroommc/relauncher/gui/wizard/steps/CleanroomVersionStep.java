@@ -39,14 +39,14 @@ public class CleanroomVersionStep implements WizardStep {
         ));
 
         // Title
-        JLabel titleLabel = DesignSystem.createHeading("Cleanroomバージョンを選択");
+        JLabel titleLabel = DesignSystem.createHeading("Select Cleanroom Version");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(titleLabel);
         mainPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
 
         // Description
         JLabel descLabel = DesignSystem.createBody(
-            "再起動するCleanroom Loaderのバージョンを選択してください。"
+            "Choose the version of Cleanroom Loader to relaunch with."
         );
         descLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(descLabel);
@@ -79,7 +79,7 @@ public class CleanroomVersionStep implements WizardStep {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBackground(DesignSystem.SURFACE);
 
-        JLabel label = DesignSystem.createSubheading("バージョン:");
+        JLabel label = DesignSystem.createSubheading("Version:");
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         leftPanel.add(label);
         leftPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
@@ -116,7 +116,7 @@ public class CleanroomVersionStep implements WizardStep {
             rightPanel.setLayout(new BorderLayout());
             rightPanel.setBackground(DesignSystem.SURFACE);
 
-            latestBadge = new JLabel("最新");
+            latestBadge = new JLabel("Latest");
             latestBadge.setFont(DesignSystem.FONT_CAPTION);
             latestBadge.setForeground(DesignSystem.TEXT_ON_PRIMARY);
             latestBadge.setBackground(DesignSystem.SUCCESS);
@@ -156,7 +156,7 @@ public class CleanroomVersionStep implements WizardStep {
         ));
         infoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
 
-        JLabel infoTitle = DesignSystem.createSubheading("ℹ バージョン情報");
+        JLabel infoTitle = DesignSystem.createSubheading("ℹ Version Information");
         infoTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         infoTitle.setForeground(DesignSystem.INFO);
         infoPanel.add(infoTitle);
@@ -176,10 +176,9 @@ public class CleanroomVersionStep implements WizardStep {
         if (selectedRelease != null) {
             boolean isLatest = !releases.isEmpty() && selectedRelease == releases.get(0);
             String desc = String.format(
-                "<html>選択: <b>%s</b>%s<br>公開日: %s</html>",
+                "<html>Selected: <b>%s</b>%s</html>",
                 selectedRelease.name,
-                isLatest ? " <span style='color: green;'>(最新)</span>" : "",
-                selectedRelease.published_at != null ? selectedRelease.published_at : "不明"
+                isLatest ? " <span style='color: green;'>(Latest)</span>" : ""
             );
             descriptionLabel.setText(desc);
 
@@ -196,13 +195,13 @@ public class CleanroomVersionStep implements WizardStep {
 
     @Override
     public String getTitle() {
-        return "Cleanroomバージョン選択";
+        return "Select Cleanroom Version";
     }
 
     @Override
     public String validate() {
         if (selectedRelease == null) {
-            return "Cleanroomバージョンを選択してください。";
+            return "Please select a Cleanroom version.";
         }
         return null;
     }
@@ -221,7 +220,7 @@ public class CleanroomVersionStep implements WizardStep {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             if (value instanceof CleanroomRelease) {
                 CleanroomRelease release = (CleanroomRelease) value;
-                setText(release.name + (index == 0 ? " (最新)" : ""));
+                setText(release.name + (index == 0 ? " (Latest)" : ""));
             }
             return this;
         }

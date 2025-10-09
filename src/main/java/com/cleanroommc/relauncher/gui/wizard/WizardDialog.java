@@ -115,14 +115,14 @@ public class WizardDialog extends JDialog {
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, DesignSystem.SPACING_SM, DesignSystem.SPACING_MD));
         buttonPanel.setBackground(DesignSystem.SURFACE);
 
-        cancelButton = DesignSystem.createSecondaryButton("キャンセル");
+        cancelButton = DesignSystem.createSecondaryButton("Cancel");
         cancelButton.addActionListener(e -> handleCancel());
 
-        previousButton = DesignSystem.createSecondaryButton("< 戻る");
+        previousButton = DesignSystem.createSecondaryButton("< Previous");
         previousButton.addActionListener(e -> previousStep());
         previousButton.setEnabled(false);
 
-        nextButton = DesignSystem.createPrimaryButton("次へ >");
+        nextButton = DesignSystem.createPrimaryButton("Next >");
         nextButton.addActionListener(e -> nextStep());
 
         buttonPanel.add(cancelButton);
@@ -181,7 +181,7 @@ public class WizardDialog extends JDialog {
             JOptionPane.showMessageDialog(
                 this,
                 validationError,
-                "入力エラー",
+                "Validation Error",
                 JOptionPane.ERROR_MESSAGE
             );
             return;
@@ -206,15 +206,15 @@ public class WizardDialog extends JDialog {
         previousButton.setEnabled(currentStepIndex > 0);
 
         if (currentStepIndex == steps.size() - 1) {
-            nextButton.setText("完了");
+            nextButton.setText("Finish");
         } else {
-            nextButton.setText("次へ >");
+            nextButton.setText("Next >");
         }
     }
 
     private void updateStepIndicator() {
         if (!steps.isEmpty()) {
-            stepIndicatorLabel.setText("ステップ " + (currentStepIndex + 1) + " / " + steps.size());
+            stepIndicatorLabel.setText("Step " + (currentStepIndex + 1) + " of " + steps.size());
         }
     }
 
@@ -229,8 +229,8 @@ public class WizardDialog extends JDialog {
     private void handleCancel() {
         int result = JOptionPane.showConfirmDialog(
             this,
-            "設定をキャンセルしますか？",
-            "確認",
+            "Are you sure you want to cancel the configuration?",
+            "Confirm Cancel",
             JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE
         );

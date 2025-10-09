@@ -32,14 +32,14 @@ public class JavaArgumentsStep implements WizardStep {
         ));
 
         // Title
-        JLabel titleLabel = DesignSystem.createHeading("Java引数の設定（オプション）");
+        JLabel titleLabel = DesignSystem.createHeading("Java Arguments (Optional)");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(titleLabel);
         mainPanel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
 
         // Description
         JLabel descLabel = DesignSystem.createBody(
-            "追加のJava引数を指定できます。通常は空欄のままで問題ありません。"
+            "Specify additional Java arguments. This can usually be left empty."
         );
         descLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         mainPanel.add(descLabel);
@@ -68,7 +68,7 @@ public class JavaArgumentsStep implements WizardStep {
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
 
         // Label
-        JLabel label = DesignSystem.createSubheading("Java引数:");
+        JLabel label = DesignSystem.createSubheading("Java Arguments:");
         card.add(label, BorderLayout.NORTH);
 
         // Text area with scroll pane
@@ -123,16 +123,16 @@ public class JavaArgumentsStep implements WizardStep {
         ));
         panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
 
-        JLabel titleLabel = DesignSystem.createSubheading("💡 引数の例");
+        JLabel titleLabel = DesignSystem.createSubheading("💡 Example Arguments");
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         titleLabel.setForeground(DesignSystem.WARNING);
         panel.add(titleLabel);
         panel.add(DesignSystem.createVerticalSpace(DesignSystem.SPACING_SM));
 
         String[] examples = {
-            "-XX:+UseG1GC - G1ガベージコレクタを使用",
-            "-XX:MaxGCPauseMillis=200 - GC一時停止時間を制限",
-            "-Dfile.encoding=UTF-8 - ファイルエンコーディングを指定"
+            "-XX:+UseG1GC - Use G1 garbage collector",
+            "-XX:MaxGCPauseMillis=200 - Limit GC pause time",
+            "-Dfile.encoding=UTF-8 - Specify file encoding"
         };
 
         for (String example : examples) {
@@ -153,7 +153,7 @@ public class JavaArgumentsStep implements WizardStep {
 
     @Override
     public String getTitle() {
-        return "Java引数";
+        return "Java Arguments";
     }
 
     @Override

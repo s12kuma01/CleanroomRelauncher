@@ -51,7 +51,7 @@ public class ModernRelauncherGUI {
         // Create wizard dialog
         WizardDialog wizard = new WizardDialog(
             null,
-            "Cleanroom Relauncher - 設定",
+            "Cleanroom Relaunch Configuration",
             icon
         );
 
