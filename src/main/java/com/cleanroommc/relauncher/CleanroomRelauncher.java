@@ -6,7 +6,7 @@ import com.cleanroommc.relauncher.config.RelauncherConfiguration;
 import com.cleanroommc.relauncher.download.CleanroomRelease;
 import com.cleanroommc.relauncher.download.cache.CleanroomCache;
 import com.cleanroommc.relauncher.download.schema.Version;
-import com.cleanroommc.relauncher.gui.RelauncherGUI;
+import com.cleanroommc.relauncher.gui.ModernRelauncherGUI;
 import com.google.gson.Gson;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.cleanroomrelauncher.ExitVMBypass;
@@ -158,14 +158,18 @@ public class CleanroomRelauncher {
 //            javaArgs = String.join(" ", ManagementFactory.getRuntimeMXBean().getInputArguments());
 //        }
         if (selected == null || javaPath == null || needsNotifyLatest) {
-            final CleanroomRelease fSelected = selected;
-            final String fJavaPath = javaPath;
-            final String fJavaArgs = javaArgs;
-            RelauncherGUI gui = RelauncherGUI.show(releases, $ -> {
-                $.selected = fSelected;
-                $.javaPath = fJavaPath;
-                $.javaArgs = fJavaArgs;
-            });
+            ModernRelauncherGUI gui = ModernRelauncherGUI.show(
+                releases,
+                selected,
+                javaPath,
+                javaArgs
+            );
+
+            if (gui == null) {
+                LOGGER.info("GUI was cancelled, exiting.");
+                ExitVMBypass.exit(0);
+                return;
+            }
 
             selected = gui.selected;
             javaPath = gui.javaPath;
