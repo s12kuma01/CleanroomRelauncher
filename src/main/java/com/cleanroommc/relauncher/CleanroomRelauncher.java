@@ -165,6 +165,9 @@ public class CleanroomRelauncher {
                 $.selected = fSelected;
                 $.javaPath = fJavaPath;
                 $.javaArgs = fJavaArgs;
+                $.maxMemory = CONFIG.getMaxMemory();
+                $.gcType = CONFIG.getGcType();
+                $.jvmFlags = new HashSet<>(CONFIG.getJvmFlags());
             });
 
             selected = gui.selected;
@@ -175,6 +178,9 @@ public class CleanroomRelauncher {
             CONFIG.setLatestCleanroomVersion(latestRelease.name);
             CONFIG.setJavaExecutablePath(javaPath);
             CONFIG.setJavaArguments(javaArgs);
+            CONFIG.setMaxMemory(gui.maxMemory);
+            CONFIG.setGcType(gui.gcType);
+            CONFIG.setJvmFlags(gui.jvmFlags);
 
             CONFIG.save();
         }
@@ -189,6 +195,34 @@ public class CleanroomRelauncher {
         LOGGER.info("Preparing to relaunch Cleanroom v{}", selected.name);
         List<String> arguments = new ArrayList<>();
         arguments.add(javaPath);
+
+        // Memory (Fallback if not in args)
+        if (CONFIG.getMaxMemory() != null && !CONFIG.getMaxMemory().isEmpty()) {
+            boolean hasXmx = false;
+            // Check javaArgs
+            if (javaArgs != null && javaArgs.contains("-Xmx")) hasXmx = true;
+            if (!hasXmx) {
+                arguments.add("-Xmx" + CONFIG.getMaxMemory());
+            }
+        }
+
+        // GC (Fallback)
+        if (CONFIG.getGcType() != null && !CONFIG.getGcType().isEmpty()) {
+            boolean hasGC = false;
+            if (javaArgs != null && javaArgs.contains("-XX:+Use") && javaArgs.contains("GC")) hasGC = true;
+             if (!hasGC) {
+                 arguments.add("-XX:+Use" + CONFIG.getGcType());
+             }
+        }
+
+        // Flags (Fallback)
+        Set<String> flags = CONFIG.getJvmFlags();
+        if (flags != null) {
+            for (String flag : flags) {
+                if (javaArgs != null && javaArgs.contains("-XX:+" + flag)) continue;
+                arguments.add("-XX:+" + flag);
+            }
+        }
 
         arguments.add("-cp");
         String libraryClassPath = versions.stream()

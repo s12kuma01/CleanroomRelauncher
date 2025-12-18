@@ -9,6 +9,8 @@ import net.minecraft.launchwrapper.Launch;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RelauncherConfiguration {
 
@@ -36,6 +38,13 @@ public class RelauncherConfiguration {
     @SerializedName("args")
     private String javaArguments = "";
 
+    @SerializedName("maxMemory")
+    private String maxMemory = "4096M";
+    @SerializedName("gcType")
+    private String gcType = "G1GC";
+    @SerializedName("jvmFlags")
+    private Set<String> jvmFlags = new HashSet<>();
+
     public String getCleanroomVersion() {
         return cleanroomVersion;
     }
@@ -52,6 +61,18 @@ public class RelauncherConfiguration {
         return javaArguments;
     }
 
+    public String getMaxMemory() {
+        return maxMemory;
+    }
+
+    public String getGcType() {
+        return gcType;
+    }
+
+    public Set<String> getJvmFlags() {
+        return jvmFlags;
+    }
+
     public void setCleanroomVersion(String cleanroomVersion) {
         this.cleanroomVersion = cleanroomVersion;
     }
@@ -66,6 +87,18 @@ public class RelauncherConfiguration {
 
     public void setJavaArguments(String javaArguments) {
         this.javaArguments = javaArguments;
+    }
+
+    public void setMaxMemory(String maxMemory) {
+        this.maxMemory = maxMemory;
+    }
+
+    public void setGcType(String gcType) {
+        this.gcType = gcType;
+    }
+
+    public void setJvmFlags(Set<String> jvmFlags) {
+        this.jvmFlags = jvmFlags;
     }
 
     public void save() {
