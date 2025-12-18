@@ -313,19 +313,60 @@ public class RelauncherGUI extends JDialog {
         
         JButton autoBtn = new JButton("Auto-Detect");
         autoBtn.addActionListener(e -> {
-            String javaHomePath = System.getProperty("java.home");
-            if (javaHomePath != null) {
-                 File javaBin = new File(javaHomePath, "bin/java" + (Platform.current().isWindows() ? ".exe" : ""));
-                 if (javaBin.exists()) {
-                     try {
-                        String path = javaBin.getCanonicalPath();
-                        javaField.setText(path);
-                        javaPath = path;
-                     } catch (IOException ex) {
-                         ex.printStackTrace();
-                     }
-                 }
-            }
+            autoBtn.setEnabled(false);
+            autoBtn.setText("Searching...");
+            new SwingWorker<List<JavaInstall>, Void>() {
+                @Override
+                protected List<JavaInstall> doInBackground() {
+                    return JavaLocator.locators().parallelStream()
+                            .map(JavaLocator::all)
+                            .flatMap(Collection::stream)
+                            .filter(install -> {
+                                try {
+                                    return install.version().major() >= 21;
+                                } catch (Throwable t) {
+                                    return false;
+                                }
+                            })
+                            .sorted(Comparator.comparing(JavaInstall::version).reversed())
+                            .distinct()
+                            .collect(Collectors.toList());
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        List<JavaInstall> installs = get();
+                        if (installs.isEmpty()) {
+                            JOptionPane.showMessageDialog(frame, "No Java 21+ installations found.", "Auto-Detect", JOptionPane.INFORMATION_MESSAGE);
+                        } else if (installs.size() == 1) {
+                            javaField.setText(installs.get(0).executable(Platform.current().isWindows()).getAbsolutePath());
+                            javaPath = javaField.getText();
+                        } else {
+                            // Multiple found, show selection
+                            JavaInstall selected = (JavaInstall) JOptionPane.showInputDialog(
+                                    frame,
+                                    "Multiple Java 21+ installations found.\nPlease select one:",
+                                    "Select Java Version",
+                                    JOptionPane.QUESTION_MESSAGE,
+                                    null,
+                                    installs.toArray(),
+                                    installs.get(0)
+                            );
+                            if (selected != null) {
+                                javaField.setText(selected.executable(Platform.current().isWindows()).getAbsolutePath());
+                                javaPath = javaField.getText();
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(frame, "Error during auto-detection: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    } finally {
+                        autoBtn.setText("Auto-Detect");
+                        autoBtn.setEnabled(true);
+                    }
+                }
+            }.execute();
         });
 
         JButton testBtn = new JButton("Test");
